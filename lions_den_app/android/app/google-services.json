@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "374303442081",
+    "project_id": "lion-s-den",
+    "storage_bucket": "lion-s-den.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374303442081:android:bac0512105169af94e9ce0",
+        "android_client_info": {
+          "package_name": "com.magnuswittrup.lions_den"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "374303442081-kpc455vq4sahjs5tqo5h29s8323sl60u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-CSqmBBFCNFqWwxdRFThBZcG7qmqlVWA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "374303442081-kpc455vq4sahjs5tqo5h29s8323sl60u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
