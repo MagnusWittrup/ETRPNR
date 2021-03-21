@@ -1,17 +1,14 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lions_den_app/models/users.dart';
 import 'package:lions_den_app/screens/landing/primary.dart';
 import 'package:provider/provider.dart';
 
-// Import the firebase_core plugin
-import 'package:firebase_core/firebase_core.dart';
-
 import 'components/Loading.dart';
 import 'components/SomethingWentWrong.dart';
+import 'models/auth.dart';
 import 'screens/auth/primary.dart';
 import 'screens/forum/primary.dart';
-import 'models/auth.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,9 +16,6 @@ void main() {
 }
 
 class App extends StatelessWidget {
-  // Create the initialization Future outside of `build`:
-  // final FirebaseAuth auth = FirebaseAuth.instance;
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -30,7 +24,7 @@ class App extends StatelessWidget {
       builder: (context, snapshot) {
         // Check for errors
         if (snapshot.hasError) {
-          return SomethingWentWrong();
+          return const SomethingWentWrong();
         }
 
         // Once complete, show your application
@@ -39,7 +33,7 @@ class App extends StatelessWidget {
         }
 
         // Otherwise, show something whilst waiting for initialization to complete
-        return Loading();
+        return const Loading();
       },
     );
   }
@@ -58,9 +52,9 @@ class LionsDenApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         routes: {
-          '/login': (ctx) => LoginScreen(),
-          '/forum': (ctx) => ForumScreen(),
-          '/': (ctx) => LandingScreen(),
+          '/login': (ctx) => const LoginScreen(),
+          '/forum': (ctx) => const ForumScreen(),
+          '/': (ctx) => const LandingScreen(),
         },
       ),
     );

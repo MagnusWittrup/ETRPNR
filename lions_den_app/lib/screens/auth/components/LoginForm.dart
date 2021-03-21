@@ -2,9 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import '../../../models/auth.dart';
+import './widgets/CustomFormField.dart';
 
 class LoginForm extends StatefulWidget {
-  LoginForm(
+  const LoginForm(
     this.auth,
   );
   final AuthModel auth;
@@ -17,8 +18,8 @@ class LoginForm extends StatefulWidget {
 
 class SignUpFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = new TextEditingController();
-  final TextEditingController _passwordController = new TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   String _emailErrorText;
   String _passErrorText;
@@ -81,27 +82,25 @@ class SignUpFormState extends State<LoginForm> {
   dynamic _onSubmit(String email, String password) async {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState.validate()) {
-      dynamic result = await widget.auth.loginUser(
+      final dynamic result = await widget.auth.loginUser(
         userEmail: email,
         userPassword: password,
       );
 
-      debugPrint('Result - Value: ' +
-          result.toString() +
-          '\nResult -Type: ' +
-          result.runtimeType.toString());
+      debugPrint(
+          'Result - Value: $result\nResult -Type: ${result.runtimeType}');
 
       if (result.runtimeType.toString() == 'FirebaseAuthException') {
-        errorHandling(result);
+        errorHandling(result as FirebaseAuthException);
         return;
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          duration: Duration(seconds: 1, milliseconds: 500),
+          duration: const Duration(seconds: 1, milliseconds: 500),
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
+            children: const <Widget>[
               Text('Processing Data..'),
               CircularProgressIndicator(),
             ],
@@ -109,14 +108,14 @@ class SignUpFormState extends State<LoginForm> {
         ),
       );
 
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 2), () {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            duration: Duration(seconds: 2, milliseconds: 500),
+            duration: const Duration(seconds: 2, milliseconds: 500),
             backgroundColor: Colors.green,
             content: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
+              children: const <Widget>[
                 Text('Succes'),
                 Icon(
                   FlutterIcons.check_circle_fea,
@@ -126,7 +125,7 @@ class SignUpFormState extends State<LoginForm> {
             ),
           ),
         );
-        Future.delayed(Duration(milliseconds: 500), () {
+        Future.delayed(const Duration(milliseconds: 500), () {
           Navigator.pushReplacementNamed(context, '/forum');
         });
       });
@@ -135,7 +134,7 @@ class SignUpFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    FocusScopeNode _node = FocusScope.of(context);
+    final FocusScopeNode _node = FocusScope.of(context);
 
     return Form(
       key: _formKey,
@@ -143,72 +142,46 @@ class SignUpFormState extends State<LoginForm> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.fromLTRB(20, 5, 20, 15),
-            decoration: BoxDecoration(
-              color: Theme.of(context).focusColor,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child:
-                //? EMAIL FORM ?//
-                TextFormField(
-              keyboardType: TextInputType.emailAddress,
-              textInputAction: TextInputAction.next,
-              onEditingComplete: () => _node.nextFocus(),
-              controller: _emailController,
-              initialValue: null,
-              decoration: InputDecoration(
-                labelText: "E-mail",
-                suffixIcon: Icon(FlutterIcons.mail_fea),
-                errorText: _emailErrorText,
-              ),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Please enter an email';
-                }
-                return null;
-              },
-            ),
-            //! EMAIL FORM !//
+          CustomFormField(
+            node: _node,
+            controller: _emailController,
+            labelText: 'E-mail',
+            keyboardType: TextInputType.emailAddress,
+            suffixIcon: const Icon(FlutterIcons.mail_fea),
+            errorText: _emailErrorText,
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter an email';
+              }
+              return null;
+            },
           ),
-          Container(
-            padding: EdgeInsets.fromLTRB(20, 5, 20, 15),
-            decoration: BoxDecoration(
-              color: Theme.of(context).focusColor,
-              borderRadius: BorderRadius.circular(10),
+          CustomFormField(
+            node: _node,
+            controller: _passwordController,
+            labelText: 'Password',
+            obscureText: true,
+            keyboardType: TextInputType.visiblePassword,
+            textInputAction: TextInputAction.done,
+            onEditingComplete: () => _onSubmit(
+              _emailController.value.text,
+              _passwordController.value.text,
             ),
-            child:
-                //? PASSWORD FORM ?//
-                TextFormField(
-              obscureText: true,
-              keyboardType: TextInputType.visiblePassword,
-              textInputAction: TextInputAction.done,
-              onEditingComplete: () => _onSubmit(
-                _emailController.value.text,
-                _passwordController.value.text,
-              ),
-              controller: _passwordController,
-              initialValue: null,
-              decoration: InputDecoration(
-                labelText: "Password",
-                suffixIcon: Icon(FlutterIcons.lock_fea),
-                errorText: _passErrorText,
-              ),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Please enter a password';
-                }
-                return null;
-              },
-            ),
-            //! PASSWORD FORM !//
+            suffixIcon: const Icon(FlutterIcons.lock_fea),
+            errorText: _passErrorText,
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter a password';
+              }
+              return null;
+            },
           ),
           ElevatedButton(
             onPressed: () => _onSubmit(
               _emailController.value.text,
               _passwordController.value.text,
             ),
-            child: Text('Submit'),
+            child: const Text('Submit'),
           ),
         ],
       ),

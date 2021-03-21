@@ -1,16 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:flutter_password_strength/flutter_password_strength.dart';
+import 'package:lions_den_app/screens/auth/components/widgets/CustomScrollableFormContainer.dart';
 import '../../../models/auth.dart';
+import '../../../models/users.dart';
+import './widgets/CustomFormField.dart';
 
 class SignUpFormStepOne extends StatefulWidget {
-  SignUpFormStepOne(
+  const SignUpFormStepOne({
     this.auth,
-    this._pageController,
-  );
+    this.users,
+    this.pageController,
+  });
   final AuthModel auth;
-  final PageController _pageController;
+  final UsersModel users;
+  final PageController pageController;
 
   @override
   SignUpFormStepOneState createState() {
@@ -20,11 +24,9 @@ class SignUpFormStepOne extends StatefulWidget {
 
 class SignUpFormStepOneState extends State<SignUpFormStepOne> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = new TextEditingController();
-  final TextEditingController _passwordControllerOne =
-      new TextEditingController();
-  final TextEditingController _passwordControllerTwo =
-      new TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordControllerOne = TextEditingController();
+  final TextEditingController _passwordControllerTwo = TextEditingController();
 
   String _emailErrorText;
   String _passErrorText;
@@ -82,207 +84,198 @@ class SignUpFormStepOneState extends State<SignUpFormStepOne> {
 
   dynamic _onSubmit() async {
     FocusScope.of(context).unfocus();
-    widget._pageController.nextPage(
-      curve: Curves.easeIn,
-      duration: Duration(milliseconds: 500),
-    );
 
-    // if (_formKey.currentState.validate()) {
-    //   dynamic result = await widget.auth.registerUser(
-    //     userEmail: _emailController.value.text,
-    //     userPassword: _passwordControllerOne.value.text,
-    //   );
+    // return;
 
-    //   debugPrint('Result - Value: ' +
-    //       result.toString() +
-    //       '\nResult -Type: ' +
-    //       result.runtimeType.toString());
+    if (_formKey.currentState.validate()) {
+      final dynamic result = await widget.auth.registerUser(
+        userEmail: _emailController.value.text,
+        userPassword: _passwordControllerOne.value.text,
+      );
 
-    //   if (result.runtimeType.toString() == 'FirebaseAuthException') {
-    //     errorHandling(result);
-    //     return;
-    //   }
+      debugPrint(
+          'Result - Value: $result\n Result -Type: ${result.runtimeType}');
 
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(
-    //       duration: Duration(seconds: 1, milliseconds: 500),
-    //       content: Row(
-    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //         children: <Widget>[
-    //           Text('Processing Data..'),
-    //           CircularProgressIndicator(),
-    //         ],
-    //       ),
-    //     ),
-    //   );
+      if (result.runtimeType.toString() == 'FirebaseAuthException') {
+        errorHandling(result as FirebaseAuthException);
+        return;
+      }
+      debugPrint('${result.user.uid}');
 
-    //   Future.delayed(Duration(seconds: 2), () {
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         duration: Duration(seconds: 2, milliseconds: 500),
-    //         backgroundColor: Colors.green,
-    //         content: Row(
-    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //           children: <Widget>[
-    //             Text('Succes'),
-    //             Icon(
-    //               FlutterIcons.check_circle_fea,
-    //               color: Colors.white,
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //     );
-    //     Future.delayed(Duration(milliseconds: 500), () {
-    //       widget._pageController.nextPage(
-    //         curve: Curves.bounceIn,
-    //         duration: Duration(milliseconds: 2),
-    //       );
-    //     });
-    //   });
-    // }
+      widget.users.updateValue(
+        variable: 'uid',
+        value: result.user.uid,
+      );
+
+      widget.pageController.nextPage(
+        curve: Curves.bounceIn,
+        duration: const Duration(milliseconds: 2),
+      );
+
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     duration: const Duration(seconds: 1, milliseconds: 500),
+      //     content: Row(
+      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //       children: const <Widget>[
+      //         Text('Processing Data..'),
+      //         CircularProgressIndicator(),
+      //       ],
+      //     ),
+      //   ),
+      // );
+
+      // Future.delayed(const Duration(seconds: 2), () {
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(
+      //       duration: const Duration(seconds: 2, milliseconds: 500),
+      //       backgroundColor: Colors.green,
+      //       content: Row(
+      //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //         children: const <Widget>[
+      //           Text('Succes'),
+      //           Icon(
+      //             FlutterIcons.check_circle_fea,
+      //             color: Colors.white,
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //   );
+      //   Future.delayed(const Duration(milliseconds: 500), () {
+      //     widget.pageController.nextPage(
+      //       curve: Curves.bounceIn,
+      //       duration: const Duration(milliseconds: 2),
+      //     );
+      //   });
+      // });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    FocusScopeNode _node = FocusScope.of(context);
+    final FocusScopeNode _node = FocusScope.of(context);
     return Form(
       key: _formKey,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 15),
-              decoration: BoxDecoration(
-                color: Theme.of(context).focusColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child:
-                  //? EMAIL FORM ?//
-                  TextFormField(
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () => _node.nextFocus(),
-                keyboardType: TextInputType.emailAddress,
-                controller: _emailController,
-                initialValue: null,
-                decoration: InputDecoration(
-                  labelText: "E-mail",
-                  suffixIcon: Icon(FlutterIcons.mail_fea),
-                  errorText: _emailErrorText,
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter an email.';
-                  }
-
-                  if (!validateEmail(_emailController.text)) {
-                    return 'E-mail is not valid.';
-                  }
-                  return null;
-                },
-              ),
-              //! EMAIL FORM !//
-            ),
-            Container(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 15),
-              decoration: BoxDecoration(
-                color: Theme.of(context).focusColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child:
-                  //? PASSWORD FORM - 1 ?//
-                  TextFormField(
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () => _node.nextFocus(),
-                obscureText: true,
-                keyboardType: TextInputType.visiblePassword,
-                controller: _passwordControllerOne,
-                initialValue: null,
-                // onChanged: (password) => _updatePass(password),
-                decoration: InputDecoration(
-                  labelText: "Password",
-                  suffixIcon: Icon(FlutterIcons.lock_fea),
-                  errorText: _passErrorText,
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please enter a password.';
-                  }
-
-                  if (value.length < 6) {
-                    return 'Password must be at least 6 characters long.';
-                  }
-                  return null;
-                },
-              ),
-              //! PASSWORD FORM - 1 !//
-            ),
-
-            // SizedBox(height: 5),
-            // Column(
-            //   crossAxisAlignment: CrossAxisAlignment.start,
-            //   children: [
-            //     Text(
-            //       'Password strength:',
-            //       textAlign: TextAlign.left,
-            //     ),
-            //     FlutterPasswordStrength(
-            //       strengthCallback: (strength) => _updateStrength(strength),
-            //       password: _passwordControllerOne.value.text,
-            //     ),
-            //   ],
-            // ),
-            Container(
-              padding: EdgeInsets.fromLTRB(20, 5, 20, 15),
-              decoration: BoxDecoration(
-                color: Theme.of(context).focusColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child:
-                  //? PASSWORD FORM - 2 ?//
-                  TextFormField(
-                textInputAction: TextInputAction.done,
-                onEditingComplete: () => _onSubmit(),
-                obscureText: true,
-                keyboardType: TextInputType.visiblePassword,
-                controller: _passwordControllerTwo,
-                initialValue: null,
-                decoration: InputDecoration(
-                  labelText: "Re-enter password",
-                  suffixIcon: Icon(FlutterIcons.lock_fea),
-                  errorText: _passErrorText,
-                ),
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Please re-enter password.';
-                  }
-
-                  if (value != _passwordControllerOne.value.text) {
-                    return "Password doesn't match";
-                  }
-                  if (value.length < 6) {
-                    return 'Password must be at least 6 characters long.';
-                  }
-                  return null;
-                },
-              ),
-              //! PASSWORD FORM - 2 !//
+          children: [
+            CustomScrollableFormContainer(
+              children: <Widget>[
+                formFields(_node),
+              ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ElevatedButton(
                   onPressed: () => _onSubmit(),
-                  child: Text('Next'),
+                  child: const Text('Next'),
                 ),
               ],
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Column formFields(FocusScopeNode _node) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        // ? EMAIL FORM ? //
+        CustomFormField(
+          node: _node,
+          keyboardType: TextInputType.emailAddress,
+          controller: _emailController,
+          labelText: "E-mail",
+          suffixIcon: const Icon(FlutterIcons.mail_fea),
+          errorText: _emailErrorText,
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Please enter an email.';
+            }
+
+            if (!validateEmail(_emailController.text)) {
+              return 'E-mail is not valid.';
+            }
+            return null;
+          },
+        ),
+
+        const SizedBox(
+          height: 10,
+        ),
+
+        //? PASSWORD FORM - 1 ?//
+        CustomFormField(
+          node: _node,
+          controller: _passwordControllerOne,
+          errorText: _passErrorText,
+          labelText: 'Password',
+          keyboardType: TextInputType.visiblePassword,
+          obscureText: true,
+          suffixIcon: const Icon(FlutterIcons.lock_fea),
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Please re-enter password.';
+            }
+            if (value.length < 6) {
+              return 'Password must be at least 6 characters long.';
+            }
+            return null;
+          },
+        ),
+
+        // SizedBox(height: 5),
+        // Column(
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   children: [
+        //     Text(
+        //       'Password strength:',
+        //       textAlign: TextAlign.left,
+        //     ),
+        //     FlutterPasswordStrength(
+        //       strengthCallback: (strength) => _updateStrength(strength),
+        //       password: _passwordControllerOne.value.text,
+        //     ),
+        //   ],
+        // ),
+
+        const SizedBox(
+          height: 10,
+        ),
+
+        //? PASSWORD FORM - 2 ?//
+        CustomFormField(
+          node: _node,
+          errorText: _passErrorText,
+          keyboardType: TextInputType.visiblePassword,
+          obscureText: true,
+          suffixIcon: const Icon(FlutterIcons.lock_fea),
+          textInputAction: TextInputAction.done,
+          onEditingComplete: () => _onSubmit(),
+          controller: _passwordControllerTwo,
+          labelText: "Re-enter password",
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Please re-enter password.';
+            }
+
+            if (value != _passwordControllerOne.value.text) {
+              return "Password doesn't match";
+            }
+            if (value.length < 6) {
+              return 'Password must be at least 6 characters long.';
+            }
+            return null;
+          },
+        ),
+      ],
     );
   }
 }

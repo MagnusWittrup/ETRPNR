@@ -1,7 +1,5 @@
-import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthModel with ChangeNotifier {
   final _auth = FirebaseAuth.instance;
@@ -27,11 +25,12 @@ class AuthModel with ChangeNotifier {
     String userPassword,
   }) async {
     try {
-      UserCredential userCredentials = await _auth.signInWithEmailAndPassword(
+      final UserCredential userCredentials =
+          await _auth.signInWithEmailAndPassword(
         email: userEmail,
         password: userPassword,
       );
-      print("$userCredentials");
+      debugPrint("$userCredentials");
       _user = userCredentials;
       notifyListeners();
       return userCredentials;
@@ -45,12 +44,12 @@ class AuthModel with ChangeNotifier {
     String userPassword,
   }) async {
     try {
-      UserCredential userCredentials =
+      final UserCredential userCredentials =
           await _auth.createUserWithEmailAndPassword(
         email: userEmail,
         password: userPassword,
       );
-      print("$userCredentials");
+      debugPrint("$userCredentials");
       _user = userCredentials;
       notifyListeners();
       return userCredentials;

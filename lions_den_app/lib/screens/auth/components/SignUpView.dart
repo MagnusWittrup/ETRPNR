@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lions_den_app/screens/auth/components/SignUpFormStepOne.dart';
-import 'package:lions_den_app/screens/auth/components/SignUpFormStepTwo.dart';
 import 'package:provider/provider.dart';
+
+import './SignUpFormStepOne.dart';
+import './SignUpFormStepThree.dart';
+import './SignUpFormStepTwo.dart';
 import '../../../models/auth.dart';
 import '../../../models/users.dart';
 
@@ -10,7 +12,7 @@ class SignUpView extends StatelessWidget {
     this.auth,
   );
   final AuthModel auth;
-  final PageController _pageController = new PageController();
+  final PageController _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +20,22 @@ class SignUpView extends StatelessWidget {
       return PageView(
         controller: _pageController,
         allowImplicitScrolling: true,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         children: [
-          SignUpFormStepOne(auth, _pageController),
-          SignUpFormStepTwo(auth, _pageController),
-          Container(
-            color: Colors.green,
+          SignUpFormStepOne(
+            auth: auth,
+            pageController: _pageController,
+            users: users,
           ),
-          Container(
-            color: Colors.blue,
+          SignUpFormStepTwo(
+            auth: auth,
+            pageController: _pageController,
+            users: users,
+          ),
+          SignUpFormStepThree(
+            auth: auth,
+            pageController: _pageController,
+            users: users,
           ),
         ],
       );

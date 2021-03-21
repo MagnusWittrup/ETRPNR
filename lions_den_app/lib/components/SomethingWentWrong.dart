@@ -5,12 +5,10 @@ class SomethingWentWrong extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Expanded(
-        child: Center(
-          child: Text(
-            "Something went wrong",
-          ),
+    return const Expanded(
+      child: Center(
+        child: Text(
+          "Something went wrong",
         ),
       ),
     );

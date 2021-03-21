@@ -5,35 +5,33 @@ import 'package:provider/provider.dart';
 import '../../models/auth.dart';
 
 class LandingScreen extends StatefulWidget {
-  LandingScreen({Key key}) : super(key: key);
+  const LandingScreen({Key key}) : super(key: key);
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LandingScreen> {
+  @override
   void initState() {
     super.initState();
     determineUserSignedIn();
   }
 
-  // void dispose() {
-  //   super.dispose();
-  // }
   bool _loadingComplete = false;
 
   void determineUserSignedIn() {
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       setState(() {
         _loadingComplete = true;
       });
-      Future.delayed(Duration(milliseconds: 500), () {
+      Future.delayed(const Duration(milliseconds: 500), () {
         FirebaseAuth.instance.authStateChanges().listen((User user) {
           if (user != null) {
-            print('User is signed in!');
+            debugPrint('User is signed in!');
             Navigator.of(context).pushReplacementNamed('/forum');
           } else {
-            print('User is not signed in!');
+            debugPrint('User is not signed in!');
             setState(() {});
             Navigator.of(context).pushReplacementNamed('/login');
           }
@@ -53,7 +51,7 @@ class _LoginScreenState extends State<LandingScreen> {
                   size: 60,
                   color: Theme.of(context).primaryColor,
                 )
-              : SizedBox(
+              : const SizedBox(
                   height: 50,
                   width: 50,
                   child: CircularProgressIndicator(),

@@ -17,9 +17,9 @@ class ForumScreen extends StatelessWidget {
               context.read<AuthModel>().logout();
               Navigator.pushReplacementNamed(context, '/login');
             },
-            child: Text('Sign out'),
+            child: const Text('Sign out'),
           ),
-          Text(
+          const Text(
             "This is the forum page",
             textAlign: TextAlign.center,
           ),
