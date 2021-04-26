@@ -8,7 +8,7 @@ import 'components/Loading.dart';
 import 'components/SomethingWentWrong.dart';
 import 'models/auth.dart';
 import 'screens/auth/primary.dart';
-import 'screens/forum/primary.dart';
+import 'screens/swiper/primary.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,9 +53,10 @@ class LionsDenApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         routes: {
           '/login': (ctx) => const LoginScreen(),
-          '/forum': (ctx) => const ForumScreen(),
-          '/': (ctx) => const LandingScreen(),
+          '/swiper': (ctx) => const SwiperScreen(),
+          // '/': (ctx) => const LandingScreen(),
         },
+        initialRoute: '/swiper',
       ),
     );
   }

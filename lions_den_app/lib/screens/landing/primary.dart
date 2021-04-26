@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LandingScreen> {
         FirebaseAuth.instance.authStateChanges().listen((User user) {
           if (user != null) {
             debugPrint('User is signed in!');
-            Navigator.of(context).pushReplacementNamed('/forum');
+            Navigator.of(context).pushReplacementNamed('/swiper');
           } else {
             debugPrint('User is not signed in!');
             setState(() {});
@@ -42,22 +42,20 @@ class _LoginScreenState extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthModel>(builder: (context, auth, child) {
-      return Scaffold(
-        body: Center(
-          child: _loadingComplete
-              ? Icon(
-                  FlutterIcons.check_circle_fea,
-                  size: 60,
-                  color: Theme.of(context).primaryColor,
-                )
-              : const SizedBox(
-                  height: 50,
-                  width: 50,
-                  child: CircularProgressIndicator(),
-                ),
-        ),
-      );
-    });
+    return Scaffold(
+      body: Center(
+        child: _loadingComplete
+            ? Icon(
+                FlutterIcons.check_circle_fea,
+                size: 60,
+                color: Theme.of(context).primaryColor,
+              )
+            : const SizedBox(
+                height: 50,
+                width: 50,
+                child: CircularProgressIndicator(),
+              ),
+      ),
+    );
   }
 }

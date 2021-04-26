@@ -1,0 +1,3 @@
+- Add "Seeking" and "Offering" sparring to user creation 
+- Add this: https://flutter.dev/docs/cookbook/animation/physics-simulation to dragable
+- Add animation/feedback when accepting/declining
