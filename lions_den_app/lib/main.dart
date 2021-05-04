@@ -1,14 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:lions_den_app/models/users.dart';
-import 'package:lions_den_app/screens/landing/primary.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lions_den_app/logic/notifiers/accepted_users_notifer.dart';
 
 import 'components/Loading.dart';
 import 'components/SomethingWentWrong.dart';
-import 'models/auth.dart';
 import 'screens/auth/primary.dart';
-import 'screens/swiper/primary.dart';
+import 'screens/main_screen.dart';
+import 'screens/pages/messages/primary_message.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,21 +41,17 @@ class App extends StatelessWidget {
 class LionsDenApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<AuthModel>(create: (_) => AuthModel()),
-        ChangeNotifierProvider<UsersModel>(create: (_) => UsersModel()),
-        // Provider<SomethingElse>(create: (_) => SomethingElse()),
-        // Provider<AnotherThing>(create: (_) => AnotherThing()),
-      ],
+    return ProviderScope(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         routes: {
           '/login': (ctx) => const LoginScreen(),
-          '/swiper': (ctx) => const SwiperScreen(),
+          '/main': (ctx) => MainScreen(),
           // '/': (ctx) => const LandingScreen(),
+          //
+          '/message': (context) => MessageScreen(),
         },
-        initialRoute: '/swiper',
+        initialRoute: '/main',
       ),
     );
   }

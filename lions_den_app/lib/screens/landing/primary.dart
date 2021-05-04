@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:provider/provider.dart';
-import '../../models/auth.dart';
 
 class LandingScreen extends StatefulWidget {
   const LandingScreen({Key key}) : super(key: key);

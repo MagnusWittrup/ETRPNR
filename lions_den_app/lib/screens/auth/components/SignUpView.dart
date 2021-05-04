@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import './SignUpFormStepOne.dart';
 import './SignUpFormStepThree.dart';
@@ -16,7 +16,9 @@ class SignUpView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<UsersModel>(builder: (context, users, child) {
+    return Consumer(builder: (context, watch, child) {
+      final users = watch(signUpProvider);
+
       return PageView(
         controller: _pageController,
         allowImplicitScrolling: true,

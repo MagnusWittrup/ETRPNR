@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lions_den_app/screens/auth/components/LoginForm.dart';
-import 'package:provider/provider.dart';
 import '../../models/auth.dart';
 import 'components/SignUpView.dart';
 
@@ -23,7 +23,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthModel>(builder: (context, auth, child) {
+    return Consumer(builder: (context, watch, child) {
+      final auth = watch(authProvider);
       return Scaffold(
         // resizeToAvoidBottomInset: false,
         body: SafeArea(

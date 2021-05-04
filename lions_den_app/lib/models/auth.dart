@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final authProvider = Provider<AuthModel>((ref) {
+  return;
+});
 
 class AuthModel with ChangeNotifier {
   final _auth = FirebaseAuth.instance;
