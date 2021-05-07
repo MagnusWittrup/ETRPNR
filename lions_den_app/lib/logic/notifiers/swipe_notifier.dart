@@ -11,8 +11,8 @@ class SwipeStateNotifier extends StateNotifier<SwipeState> {
   SwipeStateNotifier() : super(const SwipeStateNeutral());
 
   void reset() => state = const SwipeStateNeutral();
-  void accept(User activeuser) => state = SwipeStateAccept(activeuser);
-  void decline(User activeuser) => state = SwipeStateDecline(activeuser);
+  void accept(DummyUser activeuser) => state = SwipeStateAccept(activeuser);
+  void decline(DummyUser activeuser) => state = SwipeStateDecline(activeuser);
 }
 
 abstract class SwipeState {
@@ -32,8 +32,8 @@ class SwipeStateNeutral extends SwipeState {
 }
 
 class SwipeStateAccept extends SwipeState {
-  final User activeUser;
-  const SwipeStateAccept(this.activeUser);
+  final DummyUser activeDummyUser;
+  const SwipeStateAccept(this.activeDummyUser);
   @override
   String toString() {
     return 'SwipeStateAccept()';
@@ -41,8 +41,8 @@ class SwipeStateAccept extends SwipeState {
 }
 
 class SwipeStateDecline extends SwipeState {
-  final User activeUser;
-  const SwipeStateDecline(this.activeUser);
+  final DummyUser activeDummyUser;
+  const SwipeStateDecline(this.activeDummyUser);
   @override
   String toString() {
     return 'SwipeStateDecline()';

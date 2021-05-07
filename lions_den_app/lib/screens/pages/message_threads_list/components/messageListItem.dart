@@ -92,7 +92,7 @@ String determineTimeSince(DateTime timestamp) {
 }
 
 class MessageThreadHeader extends StatelessWidget {
-  final User user;
+  final DummyUser user;
   const MessageThreadHeader(
     this.user,
   );

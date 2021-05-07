@@ -10,12 +10,12 @@ class MessagesListWiew extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
-    final acceptedProvider = watch(acceptedUserListProvider);
-    final acceptedUsers = acceptedProvider.acceptedUsers;
+    final acceptedProvider = watch(acceptedDummyUserListProvider);
+    final acceptedDummyUsers = acceptedProvider.acceptedDummyUsers;
 
     final dummyThreads = DummyData().dummyThreads;
 
-    final threads = acceptedUsers
+    final threads = acceptedDummyUsers
         .map((user) => dummyThreads
             .firstWhere((thread) => thread.threadID == user.threadId))
         .toList();

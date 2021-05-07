@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lions_den_app/screens/auth/components/LoginForm.dart';
 import 'package:lions_den_app/screens/pages/swiper/components/BorderedGradientTetx.dart';
 import 'package:lions_den_app/theme/colors.dart';
+import '../../models/auth.dart';
 import 'components/SignUpView.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -26,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, watch, child) {
+      final auth = watch(authProvider);
       return Container(
         decoration: const BoxDecoration(
           gradient: gradientPrimary,
@@ -42,14 +44,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   Flexible(
                     child: Container(
                       decoration: BoxDecoration(
+                          // border: const Border.fromBorderSide(
+                          //   BorderSide(
+                          //     color: gunMetal,
+                          //     width: 3,
+                          //   ),
+                          // ),
                           borderRadius: BorderRadius.circular(16.0),
-                          boxShadow: const [
+                          boxShadow: [
                             BoxShadow(
                               color: gunMetal,
                               offset: Offset(6, 6),
                             )
                           ],
-                          color: Colors.white),
+                          color: Colors.white
+                          // color: const Color(0xffABD6CF),
+                          ),
                       child: Center(
                         child: GradientTextWithBorder(
                           text: _showLoginOrSignup == 'login'
@@ -61,32 +71,36 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   _showLoginOrSignup == 'login'
-                      ? const Flexible(
+                      ? Flexible(
                           flex: 8,
-                          child: LoginForm(),
+                          child: LoginForm(
+                            auth,
+                          ),
                         )
                       : Flexible(
                           flex: 8,
-                          child: SignUpView(),
+                          child: SignUpView(
+                            auth,
+                          ),
                         ),
                   Flexible(
                     flex: 2,
                     child: _showLoginOrSignup == 'login'
                         ? ElevatedButton.icon(
                             onPressed: () => switchShowLoginOrSignup(),
-                            icon: const Text('Sign up new user'),
-                            label: const Icon(
+                            icon: Text('Sign up new user'),
+                            label: Icon(
                               FlutterIcons.user_plus_fea,
                               size: 20,
                             ),
                           )
                         : ElevatedButton.icon(
                             onPressed: () => switchShowLoginOrSignup(),
-                            icon: const Icon(
+                            icon: Icon(
                               FlutterIcons.arrow_left_fea,
                               size: 20,
                             ),
-                            label: const Text('Return to login'),
+                            label: Text('Return to login'),
                           ),
                   ),
                 ],

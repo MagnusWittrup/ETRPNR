@@ -2,13 +2,18 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:lions_den_app/screens/auth/components/widgets/CustomFormField.dart';
-import 'package:lions_den_app/theme/colors.dart';
+import '../../../models/auth.dart';
+import '../../../models/users.dart';
 import 'widgets/CustomScrollableFormContainer.dart';
 
 class SignUpFormStepThree extends StatefulWidget {
   const SignUpFormStepThree({
+    this.auth,
+    this.users,
     this.pageController,
   });
+  final AuthModel auth;
+  final UsersModel users;
   final PageController pageController;
 
   @override
@@ -24,12 +29,20 @@ class SignUpFormStepThreeState extends State<SignUpFormStepThree> {
 
   dynamic _onSubmit(String company) async {
     FocusScope.of(context).unfocus();
+    if (widget.users.activeTags.isEmpty) {
+      widget.users.updateValue(
+          variable: "tagError", value: "Please select at least one tag.");
+    } else {
+      widget.users.updateValue(variable: "tagError", value: '');
+    }
+    if (_formKey.currentState.validate() &&
+        widget.users.activeTags.isNotEmpty) {
+      widget.users.company = company;
+      await widget.users.addUser();
 
-    if (_formKey.currentState.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           duration: const Duration(seconds: 1, milliseconds: 500),
-          backgroundColor: gradientGreen,
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const <Widget>[
@@ -72,7 +85,7 @@ class SignUpFormStepThreeState extends State<SignUpFormStepThree> {
           children: [
             CustomScrollableFormContainer(
               children: <Widget>[
-                formFields(_node, context),
+                formFields(_node, context, widget.users),
               ],
             ),
             Row(
@@ -107,9 +120,7 @@ class SignUpFormStepThreeState extends State<SignUpFormStepThree> {
   }
 
   Column formFields(
-    FocusScopeNode _node,
-    BuildContext context,
-  ) {
+      FocusScopeNode _node, BuildContext context, UsersModel users) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
@@ -144,6 +155,110 @@ class SignUpFormStepThreeState extends State<SignUpFormStepThree> {
           height: 20,
         ),
       ],
+    );
+  }
+}
+
+class TagList extends StatelessWidget {
+  const TagList({
+    Key key,
+    @required this.users,
+  }) : super(key: key);
+  final UsersModel users;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 5, 20, 15),
+      decoration: BoxDecoration(
+        color: Theme.of(context).focusColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Expertise: ',
+            style: TextStyle(
+              color: users.tagError != '' ? Theme.of(context).errorColor : null,
+            ),
+          ),
+          Wrap(
+            spacing: 8,
+            runAlignment: WrapAlignment.spaceBetween,
+            alignment: WrapAlignment.spaceEvenly,
+            children: List.generate(
+              users.tags.length,
+              (index) => TagElement(
+                tagName: users.tags[index],
+                users: users,
+              ),
+            ),
+          ),
+          users.tagError != ''
+              ? Text(
+                  users.tagError,
+                  style: TextStyle(
+                    color: Theme.of(context).errorColor,
+                  ),
+                )
+              : Container(),
+
+          // fixme: determine if this functionality is necessary
+          // ElevatedButton.icon(
+          //   onPressed: () {},
+          //   icon: const Icon(
+          //     FlutterIcons.plus_fea,
+          //   ),
+          //   label: const Text("Add tag"),
+          // ),
+        ],
+      ),
+    );
+  }
+}
+
+class TagElement extends StatelessWidget {
+  const TagElement({
+    Key key,
+    @required this.tagName,
+    @required this.users,
+  }) : super(key: key);
+  final String tagName;
+  final UsersModel users;
+
+  void _onPress(String tag) {
+    debugPrint('Tag: $tag');
+    final List<String> tempTagList = users.activeTags;
+    if (!tempTagList.contains(tag)) {
+      tempTagList.add(tag);
+    } else {
+      tempTagList.remove(tag);
+    }
+    users.updateValue(
+      variable: 'activeTags',
+      value: tempTagList,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        primary: users.activeTags.contains(tagName)
+            ? Theme.of(context).primaryColor
+            : Theme.of(context).focusColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(100000),
+        ),
+        // BorderRadius.circular(10),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10,
+        ),
+      ),
+      onPressed: () => _onPress(tagName),
+      child: Text(tagName),
     );
   }
 }

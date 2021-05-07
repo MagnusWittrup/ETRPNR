@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../dummy_data.dart';
 import 'package:lions_den_app/logic/notifiers/swipe_notifier.dart';
 import 'package:lions_den_app/theme/colors.dart';
 
-import '../../../../dummy_data.dart';
-
-class UserCardHeader extends StatelessWidget {
+class SettingsCardHeader extends StatelessWidget {
   final DummyUser user;
-  const UserCardHeader(
+  const SettingsCardHeader(
     this.user,
   );
 
@@ -31,7 +30,8 @@ class UserCardHeader extends StatelessWidget {
             child: CircleAvatar(
               radius: 36,
               backgroundColor: const Color.fromRGBO(40, 175, 176, 1.0),
-              foregroundImage: NetworkImage(user.profileImg),
+              foregroundImage:
+                  NetworkImage(user.profileImg ?? 'https://i.pravatar.cc/'),
             ),
           ),
         ),
@@ -51,7 +51,7 @@ class UserCardHeader extends StatelessWidget {
               gradient: gradientPrimary,
             ),
             child: Text(
-              user.fullName,
+              user.fullName ?? user.email,
               maxLines: 1,
               softWrap: false,
               overflow: TextOverflow.ellipsis,

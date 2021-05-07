@@ -6,7 +6,7 @@ import 'package:lions_den_app/logic/notifiers/users_notifer.dart';
 import 'package:lions_den_app/theme/colors.dart';
 
 class CardButtons extends StatelessWidget {
-  final User user;
+  final DummyUser user;
   const CardButtons(this.user);
 
   @override

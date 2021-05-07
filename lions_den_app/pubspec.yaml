@@ -9,11 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cloud_firestore: ^1.0.7
   cupertino_icons: ^1.0.2
   date_time_picker: ^2.0.0
-  firebase_auth: ^1.1.2
-  firebase_core: ^1.1.0
   flutter_chat_ui: ^1.0.2
   flutter_icons: ^1.1.0
   flutter_password_strength: ^0.1.6

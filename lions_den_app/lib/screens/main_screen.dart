@@ -15,14 +15,15 @@ class MainScreen extends StatefulWidget {
   _MainScreenState createState() => _MainScreenState();
 }
 
+final _controller = PersistentTabController(initialIndex: 1);
+final _key = GlobalKey<ScaffoldState>();
+
 class _MainScreenState extends State<MainScreen> {
   final _widgetOptions = const [
     MessagesPage(),
     SwiperPage(),
     SettingsPage(),
   ];
-
-  final _controller = PersistentTabController(initialIndex: 1);
 
   final _navbarItems = [
     PersistentBottomNavBarItem(
@@ -50,6 +51,7 @@ class _MainScreenState extends State<MainScreen> {
     return SafeArea(
       child: PersistentTabView(
         context,
+        key: _key,
         controller: _controller,
         screens: _widgetOptions,
         items: _navbarItems,

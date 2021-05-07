@@ -16,17 +16,6 @@ class SwiperPage extends StatefulWidget {
 }
 
 class _SwiperPageState extends State<SwiperPage> {
-  var acceptedUsers = <User>[];
-
-  void _onTap(int screenIndex) {
-    switch (screenIndex) {
-      case 0:
-        Navigator.of(context).pushReplacementNamed('/messages');
-        break;
-      default:
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -1,16 +1,22 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lions_den_app/dummy_data.dart';
 import 'package:lions_den_app/logic/notifiers/active_user_notifier.dart';
 import 'package:lions_den_app/screens/auth/components/widgets/CustomScrollableFormContainer.dart';
-
+import '../../../models/auth.dart';
+import '../../../models/users.dart';
 import './widgets/CustomFormField.dart';
 
 class SignUpFormStepOne extends StatefulWidget {
   const SignUpFormStepOne({
+    this.auth,
+    this.users,
     this.pageController,
   });
+  final AuthModel auth;
+  final UsersModel users;
   final PageController pageController;
 
   @override
@@ -28,6 +34,51 @@ class SignUpFormStepOneState extends State<SignUpFormStepOne> {
   String _emailErrorText;
   String _passErrorText;
 
+  void errorHandling(FirebaseAuthException error) {
+    String errorMessage;
+    String errorSource;
+
+    switch (error.code) {
+      case 'weak-password':
+        errorMessage = 'Password too weak.';
+        errorSource = 'pass';
+        break;
+      case 'email-already-in-use':
+      case 'invalid-email':
+        errorMessage = 'Invalid email.';
+        errorSource = 'email';
+        break;
+      default:
+        break;
+    }
+    setErrorText(errorMessage, errorSource);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(errorMessage),
+      ),
+    );
+    return;
+  }
+
+  void setErrorText(String errorText, String emailOrPass) {
+    setState(() {
+      switch (emailOrPass) {
+        case 'email':
+          _emailErrorText = errorText;
+          break;
+        case 'pass':
+          _passErrorText = errorText;
+          break;
+        case 'both':
+          _emailErrorText = errorText;
+          _passErrorText = errorText;
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
   bool validateEmail(String email) {
     return RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
@@ -37,7 +88,28 @@ class SignUpFormStepOneState extends State<SignUpFormStepOne> {
   dynamic _onSubmit() async {
     FocusScope.of(context).unfocus();
 
+    // return;
+
     if (_formKey.currentState.validate()) {
+      // final dynamic result = await widget.auth.registerUser(
+      //   userEmail: _emailController.value.text,
+      //   userPassword: _passwordControllerOne.value.text,
+      // );
+
+      // debugPrint(
+      //     'Result - Value: $result\n Result -Type: ${result.runtimeType}');
+
+      // if (result.runtimeType.toString() == 'FirebaseAuthException') {
+      //   errorHandling(result as FirebaseAuthException);
+      //   return;
+      // }
+      // debugPrint('${result.user.uid}');
+
+      // widget.users.updateValue(
+      //   variable: 'uid',
+      //   value: result.user.uid,
+      // );
+
       context.read(activeUserProvider).update(DummyUser(
             email: _emailController.text,
             password: _passwordControllerOne.text,

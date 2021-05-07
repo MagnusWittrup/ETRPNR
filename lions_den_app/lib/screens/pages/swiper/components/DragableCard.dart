@@ -9,7 +9,7 @@ import 'package:supercharged/supercharged.dart';
 import '../../../../dummy_data.dart';
 
 class DraggableCard extends StatefulWidget {
-  final User user;
+  final DummyUser user;
   final Widget child;
   const DraggableCard({
     @required this.child,

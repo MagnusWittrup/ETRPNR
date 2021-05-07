@@ -13,7 +13,7 @@ class CardBody extends StatelessWidget {
   }) : super(key: key);
 
   final Size size;
-  final User user;
+  final DummyUser user;
 
   @override
   Widget build(BuildContext context) {

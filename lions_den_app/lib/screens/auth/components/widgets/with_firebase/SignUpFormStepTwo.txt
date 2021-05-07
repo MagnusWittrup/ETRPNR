@@ -1,17 +1,20 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lions_den_app/dummy_data.dart';
-import 'package:lions_den_app/logic/notifiers/active_user_notifier.dart';
 import 'package:lions_den_app/screens/auth/components/widgets/CustomFormField.dart';
 import 'package:lions_den_app/theme/colors.dart';
+import '../../../models/auth.dart';
+import '../../../models/users.dart';
 import 'widgets/CustomScrollableFormContainer.dart';
 
 class SignUpFormStepTwo extends StatefulWidget {
   const SignUpFormStepTwo({
+    this.auth,
+    this.users,
     this.pageController,
   });
+  final AuthModel auth;
+  final UsersModel users;
   final PageController pageController;
 
   @override
@@ -34,14 +37,13 @@ class SignUpFormStepTwoState extends State<SignUpFormStepTwo> {
   ) async {
     if (_formKey.currentState.validate()) {
       FocusScope.of(context).unfocus();
-
-      context.read(activeUserProvider).update(DummyUser(
-            dateOfBirth: DateTime.parse(dateOfBirth),
-            fName: fName,
-            lName: lName,
-            gender: gender,
-          ));
-
+      widget.users.dateOfBirth = DateTime.parse(dateOfBirth);
+      widget.users.firstName = fName;
+      widget.users.lastName = lName;
+      widget.users.gender = gender;
+      debugPrint(
+        'First name: ${widget.users.firstName} \nLast name: ${widget.users.lastName} \nDate of Birth: ${widget.users.dateOfBirth}\nGender: ${widget.users.gender}',
+      );
       widget.pageController.nextPage(
         curve: Curves.easeIn,
         duration: const Duration(milliseconds: 500),
@@ -62,7 +64,7 @@ class SignUpFormStepTwoState extends State<SignUpFormStepTwo> {
           children: [
             CustomScrollableFormContainer(
               children: <Widget>[
-                formFields(_node, context),
+                formFields(_node, context, widget.users),
               ],
             ),
             Row(
@@ -75,17 +77,15 @@ class SignUpFormStepTwoState extends State<SignUpFormStepTwo> {
                   ),
                   child: const Text('Return'),
                 ),
-                Consumer(builder: (context, watch, widget) {
-                  return ElevatedButton(
-                    onPressed: () => _onSubmit(
-                      _firstNameController.value.text,
-                      _lastNameController.value.text,
-                      _dateOfBirthController.value.text,
-                      watch(activeUserProvider).user.gender,
-                    ),
-                    child: const Text('Next'),
-                  );
-                }),
+                ElevatedButton(
+                  onPressed: () => _onSubmit(
+                    _firstNameController.value.text,
+                    _lastNameController.value.text,
+                    _dateOfBirthController.value.text,
+                    widget.users.gender,
+                  ),
+                  child: const Text('Next'),
+                ),
               ],
             )
           ],
@@ -97,6 +97,7 @@ class SignUpFormStepTwoState extends State<SignUpFormStepTwo> {
   Column formFields(
     FocusScopeNode _node,
     BuildContext context,
+    UsersModel users,
   ) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -134,17 +135,25 @@ class SignUpFormStepTwoState extends State<SignUpFormStepTwo> {
         Container(
           padding: const EdgeInsets.fromLTRB(20, 5, 20, 15),
           decoration: BoxDecoration(
+              // border: const Border.fromBorderSide(
+              //   BorderSide(
+              //     color: gunMetal,
+              //     width: 3,
+              //   ),
+              // ),
               borderRadius: BorderRadius.circular(16.0),
-              boxShadow: const [
+              boxShadow: [
                 BoxShadow(
                   color: gunMetal,
                   offset: Offset(6, 6),
                 )
               ],
-              color: Colors.white),
+              color: Colors.white
+              // color: const Color(0xffABD6CF),
+              ),
           child: DateTimePicker(
             controller: _dateOfBirthController,
-            onFieldSubmitted: (value) => debugPrint(value),
+            onFieldSubmitted: (value) => debugPrint(widget.users.company),
             autofocus: true,
             firstDate: DateTime(1900),
             lastDate: DateTime(2100),
@@ -164,40 +173,44 @@ class SignUpFormStepTwoState extends State<SignUpFormStepTwo> {
         Container(
           padding: const EdgeInsets.fromLTRB(20, 5, 20, 15),
           decoration: BoxDecoration(
+              // border: const Border.fromBorderSide(
+              //   BorderSide(
+              //     color: gunMetal,
+              //     width: 3,
+              //   ),
+              // ),
               borderRadius: BorderRadius.circular(16.0),
-              boxShadow: const [
+              boxShadow: [
                 BoxShadow(
                   color: gunMetal,
                   offset: Offset(6, 6),
                 )
               ],
-              color: Colors.white),
+              color: Colors.white
+              // color: const Color(0xffABD6CF),
+              ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Gender'),
-              Consumer(builder: (context, watch, widget) {
-                return DropdownButton<String>(
-                  hint: const Text('Choose a gender'),
-                  items: <String>[
-                    'Male',
-                    'Female',
-                    'Other',
-                    'Prefer not to disclose'
-                  ].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  value: watch(activeUserProvider).user.gender,
-                  onChanged: (value) {
-                    context
-                        .read(activeUserProvider)
-                        .update(DummyUser(gender: value));
-                  },
-                );
-              })
+              DropdownButton<String>(
+                hint: const Text('Choose a gender'),
+                items: <String>[
+                  'Male',
+                  'Female',
+                  'Other',
+                  'Prefer not to disclose'
+                ].map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                value: users.gender,
+                onChanged: (value) {
+                  users.updateValue(variable: 'gender', value: value);
+                },
+              )
             ],
           ),
         ),

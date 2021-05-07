@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 
 class DummyData {
-  List<User> get dummyUsers => List.generate(
+  List<DummyUser> get dummyUsers => List.generate(
       fNames.length,
-      (index) => User(
+      (index) => DummyUser(
             threadId: index,
             fName: fNames[index],
             lName: lNames[index],
@@ -104,7 +104,7 @@ class DummyData {
     'Vision-oriented zero tolerance flexibility',
   ];
   final offering = [
-    'User-friendly scalable collaboration',
+    'DummyUser-friendly scalable collaboration',
     'Re-contextualized dedicated toolset',
     'Versatile well-modulated array',
     'Integrated logistical analyzer',
@@ -128,7 +128,7 @@ class DummyData {
     'Twitteraholic. Reader. Entrepreneur. Total introvert. Social media maven. Prone to fits of apathy.',
   ];
 
-  List<User> get initAcceptedUsers => dummyUsers
+  List<DummyUser> get initAcceptedDummyUsers => dummyUsers
       .where((element) => element.isAcceptedByMe && element.hasAcceptedMe)
       .toList();
 
@@ -138,7 +138,7 @@ class DummyData {
   }
 }
 
-MessageThread dummyThread(User user, int index) {
+MessageThread dummyThread(DummyUser user, int index) {
   return MessageThread(
       threadID: index,
       sender: user,
@@ -146,7 +146,7 @@ MessageThread dummyThread(User user, int index) {
       messages: dummyMessages(user));
 }
 
-List<Message> dummyMessages(User sender) => [
+List<Message> dummyMessages(DummyUser sender) => [
       Message(
         sender: sender.fullName,
         text: 'Hej med dig',
@@ -170,7 +170,7 @@ List<Message> dummyMessages(User sender) => [
       ),
     ];
 
-class User {
+class DummyUser {
   final int threadId;
   final String fName;
   final String lName;
@@ -179,9 +179,13 @@ class User {
   final String offering;
   final String seeking;
   final String bio;
-  final bool hasAcceptedMe;
   bool isAcceptedByMe;
-  User({
+  final bool hasAcceptedMe;
+  final String email;
+  final String password;
+  final String gender;
+  final DateTime dateOfBirth;
+  DummyUser({
     this.threadId,
     this.fName,
     this.lName,
@@ -192,7 +196,32 @@ class User {
     this.offering,
     this.seeking,
     this.bio,
+    this.email,
+    this.password,
+    this.gender,
+    this.dateOfBirth,
   });
+
+  DummyUser copyWith({
+    DummyUser orig,
+    DummyUser data,
+  }) =>
+      DummyUser(
+        profileImg: data.profileImg ?? orig.profileImg,
+        threadId: data.threadId ?? orig.threadId,
+        fName: data.fName ?? orig.fName,
+        lName: data.lName ?? orig.lName,
+        age: data.age ?? orig.age,
+        offering: data.offering ?? orig.offering,
+        seeking: data.seeking ?? orig.seeking,
+        bio: data.bio ?? orig.bio,
+        isAcceptedByMe: data.isAcceptedByMe ?? orig.isAcceptedByMe,
+        hasAcceptedMe: data.hasAcceptedMe ?? orig.hasAcceptedMe,
+        email: data.email ?? orig.email,
+        password: data.password ?? orig.password,
+        gender: data.gender ?? orig.gender,
+        dateOfBirth: data.dateOfBirth ?? orig.dateOfBirth,
+      );
 
   void accept() => isAcceptedByMe = true;
 
@@ -201,20 +230,28 @@ class User {
   @override
   String toString() {
     return '''
-User(
-  fName: $fName,
-  lName: $lName,
-  age: $age,
-  hasAcceptedMe: $hasAcceptedMe,
-  isAcceptedByMe: $isAcceptedByMe,
-  profileImg: $profileImg,
+DummyUser(
+profileImg: $profileImg,
+threadId: $threadId,
+fName: $fName,
+lName: $lName,
+age: $age,
+offering: $offering,
+seeking: $seeking,
+bio: $bio,
+isAcceptedByMe: $isAcceptedByMe,
+hasAcceptedMe: $hasAcceptedMe,
+email: $email,
+password: $password,
+gender: $gender,
+dateOfBirth: $dateOfBirth,
 )''';
   }
 }
 
 class MessageThread {
   final int threadID;
-  final User sender;
+  final DummyUser sender;
   final bool userActive;
   final List<Message> messages;
   const MessageThread({

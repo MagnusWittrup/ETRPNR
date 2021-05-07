@@ -10,7 +10,7 @@ import 'UserCardButtons.dart';
 import 'UserCardHeader.dart';
 
 class UserCard extends StatelessWidget {
-  final User user;
+  final DummyUser user;
   const UserCard(
     this.user,
   );
@@ -24,13 +24,13 @@ class UserCard extends StatelessWidget {
       bool isDeclining = false;
 
       if (swipeState is SwipeStateAccept) {
-        if (swipeState.activeUser == user) {
+        if (swipeState.activeDummyUser == user) {
           isAccepting = true;
         }
       }
 
       if (swipeState is SwipeStateDecline) {
-        if (swipeState.activeUser == user) {
+        if (swipeState.activeDummyUser == user) {
           isDeclining = true;
         }
       }
@@ -72,7 +72,7 @@ class FeedBackOverlay extends StatelessWidget {
 }
 
 Widget _determineOpacity(
-    Size size, User user, bool isAccepting, bool isDeclining) {
+    Size size, DummyUser user, bool isAccepting, bool isDeclining) {
   if (!(isAccepting || isDeclining)) return Text('');
   if (isAccepting) {
     return Opacity(
@@ -87,7 +87,7 @@ Widget _determineOpacity(
 }
 
 Widget _determineShaderMask(
-    Size size, User user, bool isAccepting, bool isDeclining) {
+    Size size, DummyUser user, bool isAccepting, bool isDeclining) {
   if (!(isAccepting || isDeclining)) return Text('');
   if (isAccepting) {
     return ShaderMask(
@@ -120,7 +120,7 @@ Widget _determineShaderMask(
 }
 
 Widget _determineOverlayIcon(
-    Size size, User user, bool isAccepting, bool isDeclining) {
+    Size size, DummyUser user, bool isAccepting, bool isDeclining) {
   if (!(isAccepting || isDeclining)) return Text('');
   if (isAccepting) {
     return FeedBackOverlay(

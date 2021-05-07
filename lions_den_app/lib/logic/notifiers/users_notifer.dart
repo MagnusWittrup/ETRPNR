@@ -4,11 +4,12 @@ import 'package:lions_den_app/logic/notifiers/accepted_users_notifer.dart';
 
 import '../../dummy_data.dart';
 
-final userListProvider = ChangeNotifierProvider((ref) => UserListNotifer(ref));
+final userListProvider =
+    ChangeNotifierProvider((ref) => DummyUserListNotifer(ref));
 
-class UserListNotifer extends ChangeNotifier {
+class DummyUserListNotifer extends ChangeNotifier {
   final ProviderReference ref;
-  UserListNotifer(this.ref);
+  DummyUserListNotifer(this.ref);
   final users = DummyData().dummyUsers;
 
   void reset() {
@@ -18,33 +19,33 @@ class UserListNotifer extends ChangeNotifier {
     notifyListeners();
   }
 
-  void accept(User user) {
-    final foundUser = users.firstWhere((element) => element == user);
-    foundUser.isAcceptedByMe = true;
-    if (foundUser.isAcceptedByMe && foundUser.hasAcceptedMe) {
-      ref.read(acceptedUserListProvider.notifier).add(user);
+  void accept(DummyUser user) {
+    final foundDummyUser = users.firstWhere((element) => element == user);
+    foundDummyUser.isAcceptedByMe = true;
+    if (foundDummyUser.isAcceptedByMe && foundDummyUser.hasAcceptedMe) {
+      ref.read(acceptedDummyUserListProvider.notifier).add(user);
     }
     notifyListeners();
   }
 
-  void remove(User user) {
+  void remove(DummyUser user) {
     users.remove(user);
 
     notifyListeners();
   }
 }
 
-abstract class UserListState {}
+abstract class DummyUserListState {}
 
-class UserListUsers extends UserListState {
-  final User user;
-  UserListUsers(this.user);
+class DummyUserListDummyUsers extends DummyUserListState {
+  final DummyUser user;
+  DummyUserListDummyUsers(this.user);
 
   @override
   bool operator ==(Object o) {
     if (identical(this, o)) return true;
 
-    return o is UserListUsers && o.user == user;
+    return o is DummyUserListDummyUsers && o.user == user;
   }
 
   @override

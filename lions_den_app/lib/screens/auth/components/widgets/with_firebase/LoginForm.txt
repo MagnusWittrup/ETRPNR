@@ -1,10 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:lions_den_app/theme/colors.dart';
+import '../../../models/auth.dart';
 import './widgets/CustomFormField.dart';
 
 class LoginForm extends StatefulWidget {
-  const LoginForm();
+  const LoginForm(
+    this.auth,
+  );
+  final AuthModel auth;
+
   @override
   SignUpFormState createState() {
     return SignUpFormState();
@@ -18,6 +23,36 @@ class SignUpFormState extends State<LoginForm> {
 
   String _emailErrorText;
   String _passErrorText;
+
+  void errorHandling(FirebaseAuthException error) {
+    String errorMessage;
+    String errorSource;
+
+    switch (error.code) {
+      case 'wrong-password':
+      case 'user-not-found':
+        errorMessage = 'Wrong password or email.';
+        errorSource = 'both';
+        break;
+      case 'user-disabled':
+        errorMessage = 'The user is disabled.';
+        errorSource = 'email';
+        break;
+      case 'invalid-email':
+        errorMessage = 'Not a valid e-mail.';
+        errorSource = 'email';
+        break;
+      default:
+        break;
+    }
+    setErrorText(errorMessage, errorSource);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(errorMessage),
+      ),
+    );
+    return;
+  }
 
   void setErrorText(String errorText, String emailOrPass) {
     setState(() {
@@ -47,10 +82,22 @@ class SignUpFormState extends State<LoginForm> {
   dynamic _onSubmit(String email, String password) async {
     FocusScope.of(context).unfocus();
     if (_formKey.currentState.validate()) {
+      final dynamic result = await widget.auth.loginUser(
+        userEmail: email,
+        userPassword: password,
+      );
+
+      debugPrint(
+          'Result - Value: $result\nResult -Type: ${result.runtimeType}');
+
+      if (result.runtimeType.toString() == 'FirebaseAuthException') {
+        errorHandling(result as FirebaseAuthException);
+        return;
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           duration: const Duration(seconds: 1, milliseconds: 500),
-          backgroundColor: gradientGreen,
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const <Widget>[

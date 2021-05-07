@@ -35,7 +35,7 @@ class SearchField extends StatelessWidget {
                     if (!currentFocus.hasPrimaryFocus) {
                       currentFocus.unfocus();
                       controller.clear();
-                      // context.read(acceptedUserListProvider.notifier).reset();
+                      // context.read(acceptedDummyUserListProvider.notifier).reset();
                     }
                   })
               : null,
@@ -50,7 +50,7 @@ class SearchField extends StatelessWidget {
               borderSide: BorderSide(color: Colors.grey.shade100)),
         ),
         onChanged: (String searchInput) {
-          // context.read(acceptedUserListProvider.notifier).filter(searchInput);
+          // context.read(acceptedDummyUserListProvider.notifier).filter(searchInput);
         },
       ),
     );
