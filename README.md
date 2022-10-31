@@ -1,4 +1,4 @@
-[Video](https://www.magnuswittrup.com/user_centered_design/images/preview.mp4)
+![Video](https://www.magnuswittrup.com/user_centered_design/images/preview.mp4)
 
 # Project Description
 Our overall focus is helping entrepreneurs who are new to the field. That is why we have chosen to develop a platform that can connect new entrepreneurs based on their competencies, skills and knowledge. This platform makes it possible to ‘match’ up with other entrepreneurs, where you can mutually compliment each other with the respective competencies you possess.
@@ -30,7 +30,7 @@ When the user wants to sign in, they simply need to sign in using their email an
 If the user is signing up, they will first need to input a desired email address, along with a password. The next step needs the user to input first and last name, date of birth and gender. When this information is filled in correctly, the user can advance to the last step in the registration process. On the last step the user needs to fill in a short text describing what topics they are searching for, along with a short text describing what they can offer other users in a partnership.
 
 When the user registration is complete they will be directed to the main component.
-[AuthenticationComponent](https://www.magnuswittrup.com/user_centered_design/images/Authentication_Wireflow_Website.svg)
+![AuthenticationComponent](https://www.magnuswittrup.com/user_centered_design/images/Authentication_Wireflow_Website.svg)
 
 ---
 
@@ -40,4 +40,4 @@ The first view in the main component of the application, is the matching functio
 If both users have accepted each other, they will now be allowed to interact with one another, this is done in the “messages” tab. Here they can see all the users they matched with, including the users they have already interacted with. If they wish to interact with one of the users, they simply click on card representing another user, and they will be directed to a view of their messages to one another.
 The last tab on the navigation bar, holds the settings, where the user will be able to sign out of the application as well as edit their own profile.
 
-[MainComponent](https://www.magnuswittrup.com/user_centered_design/images/Main_Wireflow_Website.svg)
+![MainComponent](https://www.magnuswittrup.com/user_centered_design/images/Main_Wireflow_Website.svg)
